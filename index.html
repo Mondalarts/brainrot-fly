@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flappy Bird</title> <!-- This is like new JFrame("Flappy Bird") -->
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- 
+      This <canvas> is the direct equivalent of your FlappyBird panel.
+      - The 'id' lets us control it with JavaScript.
+      - The 'width' and 'height' are set just like your boardWidth and boardHeight variables.
+    -->
+    <canvas id="board" width="360" height="640"></canvas>
+
+    <!-- 
+      This script tag loads and runs the game logic, similar to how you add and
+      run `new FlappyBird()` and `frame.setVisible(true)`. 
+      The actual game code from your FlappyBird.java is inside this flappybird.js file.
+    -->
+    <script src="flappybird.js"></script>
+</body>
+</html>
