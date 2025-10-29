@@ -7,8 +7,8 @@ const boardWidth = 360;
 const boardHeight = 640;
 
 // Bird properties (Updated Size)
-const birdWidth = 85;
-const birdHeight = 60;
+const birdWidth = 68;
+const birdHeight = 47;
 const birdX = boardWidth / 8;
 const birdY = boardHeight / 2;
 
@@ -168,4 +168,5 @@ document.addEventListener("touchstart", handleInput);
 backgroundImg.onload = function() {
     requestAnimationFrame(gameLoop);
 };
+
 
