@@ -2,11 +2,11 @@
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
 
-// --- Game Variables (equivalent to your Java class members) ---
+// --- Game Variables ---
 const boardWidth = 360;
 const boardHeight = 640;
 
-// Bird properties
+// Bird properties (Updated Size)
 const birdWidth = 85;
 const birdHeight = 60;
 const birdX = boardWidth / 8;
@@ -17,16 +17,16 @@ const pipeWidth = 64;
 const pipeHeight = 512;
 
 // Game physics
-let velocityX = -4; // Pipe moving speed
-let velocityY = 0;  // Bird's jump/fall speed
+let velocityX = -4; 
+let velocityY = 0;
 let gravity = 1;
 
 // Game State
 let gameOver = false;
 let score = 0;
-let pipes = []; // Equivalent to ArrayList<Pipe>
+let pipes = [];
 
-// --- Image Loading (equivalent to new ImageIcon(...)) ---
+// --- Image Loading ---
 const birdImg = new Image();
 birdImg.src = "./flappybird.png";
 
@@ -39,7 +39,7 @@ bottomPipeImg.src = "./bottompipe.png";
 const backgroundImg = new Image();
 backgroundImg.src = "./flappybirdbg.png";
 
-// Bird Object (equivalent to your Bird class instance)
+// Bird Object
 let bird = {
     x: birdX,
     y: birdY,
@@ -48,15 +48,12 @@ let bird = {
 };
 
 // --- Game Logic Functions ---
-
-// Equivalent to your `placePipes()` method
 function placePipes() {
     if (gameOver) return;
 
     let randomPipeY = 0 - pipeHeight / 4 - Math.random() * (pipeHeight / 2);
     let openingSpace = boardHeight / 4;
 
-    // Top Pipe
     let topPipe = {
         img: topPipeImg,
         x: boardWidth,
@@ -67,7 +64,6 @@ function placePipes() {
     };
     pipes.push(topPipe);
 
-    // Bottom Pipe
     let bottomPipe = {
         img: bottomPipeImg,
         x: boardWidth,
@@ -79,58 +75,45 @@ function placePipes() {
     pipes.push(bottomPipe);
 }
 
-// Equivalent to your `move()` method
 function move() {
     if (gameOver) return;
 
-    // Bird movement
     velocityY += gravity;
     bird.y += velocityY;
-    bird.y = Math.max(bird.y, 0); // Prevent bird from going above the screen
+    bird.y = Math.max(bird.y, 0);
 
-    // Pipe movement and collision
     for (let i = 0; i < pipes.length; i++) {
         let pipe = pipes[i];
         pipe.x += velocityX;
 
-        // Check for score
         if (!pipe.passed && bird.x > pipe.x + pipe.width) {
-            score += 0.5; // Score increases by 1 for each pair of pipes
+            score += 0.5;
             pipe.passed = true;
         }
 
-        // Check for collision
         if (collision(bird, pipe)) {
             gameOver = true;
         }
     }
     
-    // Remove off-screen pipes to save memory
     while (pipes.length > 0 && pipes[0].x < -pipeWidth) {
-        pipes.shift(); // Removes the first element
+        pipes.shift();
     }
 
-    // Game over if bird hits the ground
     if (bird.y > boardHeight) {
         gameOver = true;
     }
 }
 
-// Equivalent to your `draw()` method
 function draw() {
-    // Background
     ctx.drawImage(backgroundImg, 0, 0, boardWidth, boardHeight);
-
-    // Bird
     ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
 
-    // Pipes
     for (let i = 0; i < pipes.length; i++) {
         let pipe = pipes[i];
         ctx.drawImage(pipe.img, pipe.x, pipe.y, pipe.width, pipe.height);
     }
     
-    // Score
     ctx.fillStyle = "white";
     ctx.font = "32px Arial";
     if (gameOver) {
@@ -140,7 +123,6 @@ function draw() {
     }
 }
 
-// Equivalent to your `collision()` method
 function collision(a, b) {
     return (
         a.x < b.x + b.width &&
@@ -150,7 +132,6 @@ function collision(a, b) {
     );
 }
 
-// Reset game state on restart
 function restartGame() {
     bird.y = birdY;
     velocityY = 0;
@@ -159,34 +140,32 @@ function restartGame() {
     score = 0;
 }
 
-// --- Main Game Loop (equivalent to your Timers and ActionListeners) ---
 function gameLoop() {
-    move();  // Update game state
-    draw();  // Render the screen
-    requestAnimationFrame(gameLoop); // Calls gameLoop on the next frame
+    move();
+    draw();
+    requestAnimationFrame(gameLoop);
 }
 
-// Start the pipe placement timer (equivalent to `placePipeTimer`)
 setInterval(placePipes, 1500);
 
-// --- Event Handling (equivalent to KeyListener) ---
-document.addEventListener("keydown", (e) => {
-    if (e.code == "Space") {
-        velocityY = -9; // Jump
+// --- UPDATED EVENT HANDLING FOR MOBILE ---
+function handleInput(e) {
+    e.preventDefault(); // This is important to prevent zoom/scroll
+    
+    velocityY = -9; // Jump
 
-        if (gameOver) {
-            restartGame();
-        }
+    if (gameOver) {
+        restartGame();
     }
-});
+}
 
-// Wait for the background image to load before starting the game
+// Listen for both mouse clicks and screen taps
+document.addEventListener("mousedown", handleInput);
+document.addEventListener("touchstart", handleInput);
+
+
+// Wait for images to load before starting
 backgroundImg.onload = function() {
     requestAnimationFrame(gameLoop);
 };
-
-
-
-
-
 
